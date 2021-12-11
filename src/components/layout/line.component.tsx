@@ -1,5 +1,5 @@
 import React from "react";
-import "./line.css";
+import "./line.component.css";
 
 type Props = {
   vertical?: boolean;

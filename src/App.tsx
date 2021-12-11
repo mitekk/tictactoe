@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import TictacLayout from "./layout";
+import TictacLayout from "./layout/tictac.layout";
 import TictacPage from "./pages";
 
 function App() {

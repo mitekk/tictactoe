@@ -1,12 +1,11 @@
 import React, { MouseEvent } from "react";
-import "./field.css";
+import { Highlight } from "../../types/highlight.type";
+import { PlayerTag } from "../../types/playerTag.type";
+import "./field.component.css";
 
-export type Player = "o" | "x" | "empty";
-export type Highlight = "win" | "lose" | "none";
-
-export type FieldProps = {
+type FieldProps = {
   index: number;
-  player: Player;
+  player: PlayerTag;
   highlight?: Highlight;
   onSelect?: (e: MouseEvent<HTMLDivElement>, index: number) => void;
 };
@@ -18,7 +17,7 @@ const defaultProps: FieldProps = {
   highlight: "none",
 };
 
-const Field = ({ index, player, highlight, onSelect }: FieldProps) => {
+const BoardField = ({ index, player, highlight, onSelect }: FieldProps) => {
   const getContent = {
     x: <div>x</div>,
     o: <div>o</div>,
@@ -32,6 +31,6 @@ const Field = ({ index, player, highlight, onSelect }: FieldProps) => {
   );
 };
 
-Field.defaultProps = defaultProps;
+BoardField.defaultProps = defaultProps;
 
-export { Field };
+export { BoardField };

@@ -1,5 +1,5 @@
 import React from "react";
-import "./scoreboard.css";
+import "./scoreboard.component.css";
 
 type Player = { name: string; score: number };
 
@@ -11,7 +11,7 @@ export const Scoreboard = ({ players }: ScoreboardProps) => {
   return (
     <div className="scoreboard">
       {players.map((player) => (
-        <div className="player">
+        <div className="player" key={`player-${player.name}`}>
           <div className="name">{player.name}</div>
           <div className="score">{player.score}</div>
         </div>

@@ -1,10 +1,12 @@
 import axios from "axios";
-import { FieldProps } from "../components/field/field";
+import { Field } from "../types/field.type";
 
 const baseURL = "http://localhost:3001";
+const playerURL = `${baseURL}/player`;
+const aiURL = `${baseURL}/ai`;
 
-type ProcessMoveResponse = {
-  fields: FieldProps[];
+export type ProcessMoveResponse = {
+  fields: Field[];
   opponentMove?: number;
   event: {
     status: string;
@@ -15,9 +17,13 @@ type ProcessMoveResponse = {
 };
 
 export default {
-  processMove: (index: Number, fields: Array<FieldProps>) =>
-    axios.post<ProcessMoveResponse>(baseURL, {
+  playerMove: (index: Number, fields: Array<Field>) =>
+    axios.post<ProcessMoveResponse>(playerURL, {
       index,
+      fields,
+    }),
+  AIMove: (fields: Array<Field>) =>
+    axios.post<ProcessMoveResponse>(aiURL, {
       fields,
     }),
 };

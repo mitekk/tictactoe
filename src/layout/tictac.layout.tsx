@@ -1,4 +1,4 @@
-import Line from "../components/layout";
+import Line from "../components/layout/line.component";
 import "./tictac.layout.css";
 
 type Props = {
