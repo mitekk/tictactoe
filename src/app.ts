@@ -10,16 +10,28 @@ app.use(express.json());
 app.use(cors());
 app.use(errorHandler);
 
-app.post("/", (req, res, next) => {
+app.post("/player", (req, res, next) => {
   let result;
   try {
-    result = TicTacHandler.processMove(req.body);
+    result = TicTacHandler.playerTurn(req.body);
   } catch (error) {
     next(error);
   }
 
   return res.send(result);
 });
+
+app.post("/ai", (req, res, next) => {
+  let result;
+  try {
+    result = TicTacHandler.AITurn(req.body);
+  } catch (error) {
+    next(error);
+  }
+
+  return res.send(result);
+});
+
 app.listen(port, () => {
   return console.log(`server is listening on ${port}`);
 });

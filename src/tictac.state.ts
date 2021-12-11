@@ -1,36 +1,11 @@
-import * as TicTacHandler from "./tictac.handler";
 import _ from "lodash";
-
-export type StateReadResult = {
-  indexes: number[];
-  count: number;
-};
-
-const LENGTH = 3;
-
-const Directions = {
-  a: -1 * LENGTH,
-  b: -1 * (LENGTH - 1),
-  c: 1,
-  d: 1 * (LENGTH + 1),
-  e: 1 * LENGTH,
-  f: 1 * (LENGTH - 1),
-  g: -1,
-  h: -1 * (LENGTH + 1),
-};
-
-const DirectionPairs = {
-  vertical: [Directions.a, Directions.e],
-  horizontal: [Directions.c, Directions.g],
-  criss: [Directions.d, Directions.h],
-  cross: [Directions.b, Directions.f],
-};
+import { Payload } from "./types/payload.type";
+import { ReadResult } from "./types/readResult.type";
+import { DIRECTIONPAIRS, GRID_LENGTH } from "./config/constants";
+import { StateReadResult } from "./types/stateReadResult.type";
 
 export default {
-  // index: selected index
-  // fields: board fields
-  // playerTag: 'o' or 'x'
-  read: ({ index, fields, playerTag = "o" }: TicTacHandler.Payload) => {
+  read: ({ index, fields, playerTag = "o" }: Payload) => {
     // try set player field to read result
     const setPlayer = (pivot: number, result: StateReadResult) => {
       if (fields[pivot]?.player === playerTag) {
@@ -63,7 +38,7 @@ export default {
     };
 
     // count number of playerTags in all directions
-    return Object.entries(DirectionPairs)
+    return Object.entries(DIRECTIONPAIRS)
       .map(([key, directions]) => {
         let indexScope;
 
@@ -85,12 +60,12 @@ export default {
           }
         } else if (key === "horizontal") {
           // get row of scoped indexes
-          indexScope = _.chunk(fields, LENGTH)
+          indexScope = _.chunk(fields, GRID_LENGTH)
             .filter((chunk) => chunk.findIndex((i) => i.index === index) !== -1)
             .flatMap((chunk) => chunk.map((field) => field.index));
         } else if (key === "vertical") {
           // allow all - direction volume covers it
-          indexScope = _.range(Math.pow(LENGTH, 2));
+          indexScope = _.range(Math.pow(GRID_LENGTH, 2));
         }
 
         if (indexScope) {
@@ -123,12 +98,12 @@ export default {
   },
 
   // find a row with 3 playerTag fields
-  findWinner: (results: TicTacHandler.ReadResult) => {
+  findWinner: (results: ReadResult) => {
     let winnerIndexes;
 
     const winnerDirections = results.filter((result) => {
       const { count } = result![Object.keys(result!)[0]];
-      return count === LENGTH;
+      return count === GRID_LENGTH;
     });
 
     if (winnerDirections.length > 0) {
@@ -141,7 +116,26 @@ export default {
     return _.uniq(winnerIndexes);
   },
 
-  // were all fields selected by player/AI
-  isTie: ({ fields }: TicTacHandler.Payload) =>
+  // empty fields remain ?
+  isTie: ({ fields }: Payload) =>
     fields.filter((field) => field.player === "empty").length === 0,
+
+  // can move onto empty field only
+  validateMove: ({ index, fields }: Payload) =>
+    fields[index].player === "empty",
+
+  // tag user by field index s
+  markPlayerMove: ({ index, fields, playerTag = "o" }: Payload) =>
+    fields.map((field) => {
+      if (field.index === index) {
+        field.player = playerTag;
+      }
+      return field;
+    }),
+
+  // TODO: come up with wiser one
+  createAIMove: ({ fields, playerTag = "x" }: Payload) => ({
+    ...fields.filter((field) => field.player === "empty").pop(),
+    player: playerTag,
+  }),
 };
