@@ -1,0 +1,25 @@
+.scoreboard {
+  display: flex;
+  width: 100%;
+  position: absolute;
+  justify-content: space-between;
+  top: 0px;
+}
+
+.player {
+  display: flex;
+}
+
+.name,
+.score {
+  padding: 3px;
+  font-size: 20px;
+}
+
+.name {
+  font-weight: 200;
+}
+
+.score {
+  font-weight: 300;
+}

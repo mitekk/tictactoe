@@ -1,16 +1,18 @@
 import React from "react";
-type Player = { title: string; score: number };
+import "./scoreboard.css";
+
+type Player = { name: string; score: number };
 
 type ScoreboardProps = {
   players: Array<Player>;
 };
 
-const Scoreboard = ({ players }: ScoreboardProps) => {
+export const Scoreboard = ({ players }: ScoreboardProps) => {
   return (
-    <div>
+    <div className="scoreboard">
       {players.map((player) => (
         <div className="player">
-          <div className="title">{player.title}</div>
+          <div className="name">{player.name}</div>
           <div className="score">{player.score}</div>
         </div>
       ))}
