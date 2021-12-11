@@ -80,15 +80,6 @@ export const processMove = (payload: Payload): MoveResult => {
     // ---------- Player ----------
     const fieldsPlayer = markPlayerMove(payload);
 
-    let tiePlayer = tictacState.isTie(payload);
-    if (tiePlayer) {
-      return getResponse({
-        status: "tie",
-        fields: fieldsPlayer,
-        score: 10,
-      });
-    }
-
     const fieldsPlayerStateResult = tictacState.read({
       ...payload,
       fields: fieldsPlayer,
@@ -101,6 +92,15 @@ export const processMove = (payload: Payload): MoveResult => {
         fields: fieldsPlayer,
         indexes: winnerPlayerIndexes!,
         score: 100,
+      });
+    }
+
+    let tiePlayer = tictacState.isTie(payload);
+    if (tiePlayer) {
+      return getResponse({
+        status: "tie",
+        fields: fieldsPlayer,
+        score: 10,
       });
     }
 
@@ -117,16 +117,6 @@ export const processMove = (payload: Payload): MoveResult => {
       playerTag: tagAI,
     });
 
-    let tieAI = tictacState.isTie({ ...payload, fields: fieldsAI });
-    if (tieAI) {
-      return getResponse({
-        status: "tie",
-        fields: fieldsPlayer,
-        score: 10,
-        opponentMove: indexAI,
-      });
-    }
-
     const fieldsAIStateResult = tictacState.read({
       index: indexAI,
       fields: fieldsAI,
@@ -141,6 +131,16 @@ export const processMove = (payload: Payload): MoveResult => {
         indexes: winnerAIIndexes,
         playerTag: tagAI,
         score: 100,
+        opponentMove: indexAI,
+      });
+    }
+
+    let tieAI = tictacState.isTie({ ...payload, fields: fieldsAI });
+    if (tieAI) {
+      return getResponse({
+        status: "tie",
+        fields: fieldsPlayer,
+        score: 10,
         opponentMove: indexAI,
       });
     }
