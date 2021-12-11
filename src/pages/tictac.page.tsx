@@ -120,7 +120,6 @@ const TictacPage = () => {
 
   return (
     <div className="fieldsContainer">
-      <div style={{ height: "25px" }}></div>
       <Scoreboard players={players} />
       {fields.map((field) => (
         <Field
