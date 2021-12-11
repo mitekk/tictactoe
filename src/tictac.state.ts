@@ -33,7 +33,7 @@ export default {
   read: ({ index, fields, playerTag = "o" }: TicTacHandler.Payload) => {
     // try set player field to read result
     const setPlayer = (pivot: number, result: StateReadResult) => {
-      if (fields[pivot].player === playerTag) {
+      if (fields[pivot]?.player === playerTag) {
         result.indexes.push(pivot);
         result.count++;
       }
@@ -118,56 +118,30 @@ export default {
             [key]: setPlayer(index, result),
           };
         }
-
-        // if (key === "criss" || key === "cross" ? index % 2 === 0 : true) {
-        //   const [directionOne, directionTwo] = directions;
-        //   const directionOneResult = findPaths(
-        //     index + directionOne,
-        //     directionOne
-        //   );
-        //   const directionTwoResult = findPaths(
-        //     index + directionTwo,
-        //     directionTwo
-        //   );
-
-        //   const result = {
-        //     indexes: [
-        //       ...directionOneResult.indexes,
-        //       ...directionTwoResult.indexes,
-        //     ],
-        //     count: directionOneResult.count + directionTwoResult.count,
-        //   };
-
-        //   return {
-        //     [key]: setPlayer(index, result),
-        //   };
-        // }
       })
       .filter((d) => d);
   },
 
   // find a row with 3 playerTag fields
   findWinner: (results: TicTacHandler.ReadResult) => {
-    let winner;
+    let winnerIndexes;
 
-    const winners = results.filter((result) => {
+    const winnerDirections = results.filter((result) => {
       const { count } = result![Object.keys(result!)[0]];
       return count === LENGTH;
     });
 
-    if (winners.length > 0) {
-      if (winners.length > 1) {
-        throw Error("You are a hacker!");
-      }
-      const candidate = winners.pop();
-      const { indexes } = candidate![Object.keys(candidate!)[0]];
-      winner = indexes;
+    if (winnerDirections.length > 0) {
+      winnerIndexes = winnerDirections.flatMap((candidate) => {
+        const { indexes } = candidate![Object.keys(candidate!)[0]];
+        return indexes;
+      });
     }
 
-    return winner;
+    return _.uniq(winnerIndexes);
   },
 
   // were all fields selected by player/AI
   isTie: ({ fields }: TicTacHandler.Payload) =>
-    fields.filter((field) => field.player !== "empty").length === 0,
+    fields.filter((field) => field.player === "empty").length === 0,
 };

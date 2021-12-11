@@ -46,6 +46,15 @@ const AIMove = ({ fields, opponentTag = "x" }: Payload) => ({
   player: opponentTag,
 });
 
+type ResponseFields = {
+  fields: Field[];
+  status: string;
+  indexes?: number[];
+  playerTag?: string;
+  opponentMove?: number;
+  score?: number;
+};
+
 const getResponse = ({
   fields,
   status,
@@ -53,14 +62,7 @@ const getResponse = ({
   playerTag = "o",
   opponentMove,
   score,
-}: {
-  fields: Field[];
-  status: string;
-  indexes?: number[];
-  playerTag?: string;
-  opponentMove?: number;
-  score?: number;
-}): MoveResult => ({
+}: ResponseFields): MoveResult => ({
   fields,
   event: {
     status,
@@ -77,22 +79,6 @@ export const processMove = (payload: Payload): MoveResult => {
   if (validation) {
     // ---------- Player ----------
     const fieldsPlayer = markPlayerMove(payload);
-    const fieldsPlayerStateResult = tictacState.read({
-      ...payload,
-      fields: fieldsPlayer,
-    })!;
-
-    console.log(fieldsPlayerStateResult);
-
-    let winnerPlayerIndexes = tictacState.findWinner(fieldsPlayerStateResult);
-    if (winnerPlayerIndexes) {
-      return getResponse({
-        status: "win",
-        fields: fieldsPlayer,
-        indexes: winnerPlayerIndexes!,
-        score: 100,
-      });
-    }
 
     let tiePlayer = tictacState.isTie(payload);
     if (tiePlayer) {
@@ -100,6 +86,21 @@ export const processMove = (payload: Payload): MoveResult => {
         status: "tie",
         fields: fieldsPlayer,
         score: 10,
+      });
+    }
+
+    const fieldsPlayerStateResult = tictacState.read({
+      ...payload,
+      fields: fieldsPlayer,
+    })!;
+
+    let winnerPlayerIndexes = tictacState.findWinner(fieldsPlayerStateResult);
+    if (winnerPlayerIndexes.length) {
+      return getResponse({
+        status: "win",
+        fields: fieldsPlayer,
+        indexes: winnerPlayerIndexes!,
+        score: 100,
       });
     }
 
@@ -133,7 +134,7 @@ export const processMove = (payload: Payload): MoveResult => {
     })!;
 
     let winnerAIIndexes = tictacState.findWinner(fieldsAIStateResult);
-    if (winnerAIIndexes) {
+    if (winnerAIIndexes.length) {
       return getResponse({
         status: "win",
         fields: fieldsPlayer,
