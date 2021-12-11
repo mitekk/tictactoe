@@ -1,39 +1,49 @@
 import React, { MouseEvent, useState } from "react";
 import { Field } from "../components/field";
 import { FieldProps } from "../components/field/field";
+import tictacAPI from "../api/tictac.api";
 import "./tictac.page.css";
 
 const TictacPage = () => {
-  const tmp_fields: Array<FieldProps> = [
+  const initialFields: FieldProps[] = [
     {
-      owner: "empty",
+      player: "empty",
+      index: 0,
     },
     {
-      owner: "empty",
+      player: "empty",
+      index: 1,
     },
     {
-      owner: "empty",
+      player: "empty",
+      index: 2,
     },
     {
-      owner: "empty",
+      player: "empty",
+      index: 3,
     },
     {
-      owner: "empty",
+      player: "empty",
+      index: 4,
     },
     {
-      owner: "empty",
+      player: "empty",
+      index: 5,
     },
     {
-      owner: "empty",
+      player: "empty",
+      index: 6,
     },
     {
-      owner: "empty",
+      player: "empty",
+      index: 7,
     },
     {
-      owner: "empty",
+      player: "empty",
+      index: 8,
     },
   ];
-  const [fields, setFields] = useState(tmp_fields);
+  const [fields, setFields] = useState(initialFields);
   const [score, setScore] = useState({
     x: { score: 0 },
     o: { score: 0 },
@@ -43,25 +53,32 @@ const TictacPage = () => {
     fields: [],
   });
 
-  const handleSelect = (e: MouseEvent<HTMLDivElement>, index: number) => {
-    setFields(
-      fields.map((field, fieldIndex) => {
-        if (fieldIndex === index) {
-          field.owner = "o";
-        }
+  const handleSelect = async (e: MouseEvent<HTMLDivElement>, index: number) => {
+    const { data } = await tictacAPI.processMove(index, fields);
+    setFields(data.fields);
+    console.log(data.event);
+    console.log(data.opponentMove);
 
-        return field;
-      })
-    );
+    // TODO: TSlint error - although seems to be correct. eject\eslint pluging? leaving for now
+
+    // setFields(
+    //   fields.map((field, fieldIndex) => {
+    //     if (fieldIndex === index) {
+    //       field.player = "o";
+    //     }
+
+    //     return field;
+    //   })
+    // );
   };
 
   return (
     <div className="fieldsContainer">
-      {fields.map((field, index) => (
+      {fields.map((field) => (
         <Field
-          key={`field-${field.owner}-${index}`}
-          index={index}
-          owner={field.owner}
+          key={`field-${field.player}-${field.index}`}
+          index={field.index}
+          player={field.player}
           onSelect={handleSelect}
         ></Field>
       ))}
