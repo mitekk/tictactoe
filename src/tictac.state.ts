@@ -10,7 +10,9 @@ export default {
 
     const rowChunks = _.chunk(fields, GRID_LENGTH);
 
+    // get scoped paths which are indexes to look for winners
     const getPathsBy = (index: number) => ({
+      // -1 will be ignored - grid doesn't include that index
       criss: index % 4 === 0 ? [0, 4, 8] : [-1],
       cross: index % 2 === 0 ? [2, 4, 6] : [-1],
       horizontal: rowChunks
