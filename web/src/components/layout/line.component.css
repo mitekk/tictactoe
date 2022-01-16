@@ -1,0 +1,13 @@
+.line {
+  background-color: darkgrey;
+  flex: 1;
+  border-radius: 5px;
+}
+
+.vertical {
+  max-width: 5px;
+}
+
+.horizontal {
+  max-height: 5px;
+}

@@ -1,0 +1,26 @@
+.fieldContainer {
+  width: 33%;
+  height: 33%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 125px;
+  line-height: 0;
+  color: darkslategrey;
+  cursor: default;
+  user-select: none;
+}
+
+.empty {
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+}
+
+.win {
+  background: radial-gradient(circle at 50% 50%, #acfd79b8 5%, #ee82ee00 50%);
+}
+
+.lose {
+  background: radial-gradient(circle at 50% 50%, #fd7979b8 5%, #ee82ee00 50%);
+}
